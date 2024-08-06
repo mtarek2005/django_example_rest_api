@@ -18,7 +18,7 @@ def user_list_posts(request, pk):
         user = User.objects.get(pk=pk)
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    serializer = PostSerializer(user.posts.all(), many = True)
+    serializer = PostSerializer(user.profile.posts.all(), many = True)
     return Response(serializer.data)
 
 @api_view(['GET'])
@@ -206,3 +206,25 @@ def user_update_bio(request):
     user.profile.bio=content
     serializer = ProfileSerializer(user.profile)
     return Response(serializer.data, status= status.HTTP_202_ACCEPTED)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def uploadImage(request):
+    data = request.data
+
+    obj_id = data['obj_id']
+    obj= Post.objects.get(id=obj_id)
+    if obj.author.user==request.user:
+        obj.image = request.FILES.get('image')
+        obj.save()
+        return Response('Image was uploaded')
+    else:
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
+def post_view(request, pk):
+    try:
+        post = Post.objects.get(pk=pk)
+    except Post.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    context = {"post": post,"liked_color":"green" if post.likes.contains(request.user.profile) else "black"}
+    return render(request, "thetestapi/post.html", context)

@@ -23,6 +23,7 @@ class Post(models.Model):
     content = models.TextField()
     likes = models.ManyToManyField(Profile, related_name="likes")
     reply_to = models.ForeignKey("self", on_delete=models.CASCADE, related_name="replies", null=True)
+    image = models.ImageField(null=True, blank=True)
     @property
     def likes_count(self):
         return self.likes.count()

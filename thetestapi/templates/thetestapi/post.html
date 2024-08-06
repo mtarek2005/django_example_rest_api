@@ -1,0 +1,14 @@
+<style>
+    img{
+        object-fit: cover; 
+        width: 30em; 
+        height:20em;
+        border-radius: 10px;
+    }
+</style>
+<div>
+    <h6>Author: {{ post.author.user.username }}</h6>
+    <p>{{ post.content }}</p>
+    <p><img src="{{ post.image.url }}"></p>
+    <p><button style="color:{{liked_color}}">👍{{ post.likes_count }}</button></p>
+</div>

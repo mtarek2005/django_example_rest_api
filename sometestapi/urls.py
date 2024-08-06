@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include,path
+from django.conf import settings
+from django.conf.urls.static import static
 from rest_framework.authtoken.views import obtain_auth_token
 from oauth2_provider import urls as oauth2_urls
 
@@ -25,4 +27,5 @@ urlpatterns = [
     path('o/', include(oauth2_urls)),
     path('api-auth', include('rest_framework.urls')),
     path('api-token-auth', obtain_auth_token),
-]
+    path('accounts/', include('allauth.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
